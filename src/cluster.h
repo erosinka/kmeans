@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <cmath>
 
 #include "point.h"
 #include "algo.h"
@@ -8,44 +9,39 @@
 
 #ifndef CLUSTER
 #define CLUSTER
-//to do namespace
+
+
 namespace kmean {
 
 class cloud {
     std::vector<point> points;
     std::vector<point> centroids;
-    std::vector<point> old_centroids;
-    // vector of values point i assigned to cluster k
+    // vector of cluster id of each point i 
     std::vector<int> point2cluster;
     std::vector<int> old_point2cluster;
     // number of clusters
-    int cluster_num;
+    int _cluster_num;
+    int _cluster_assign_diff;
 
     void initialize() {
-        // initialize a random generator
-        // choose randomly k centroids
-        random_generator rgen(0, points.size() - 1, cluster_num);
-        // possible alternative 
-        // std::copy(centroids.begin(),centroids.end(),points.begin()); 
-        // std::shuffle(....) 
-        // centroids.resize(clust_num); 
+        // choose randomly k centroids by 
+        // shuffling points and then cut-off first clust_num
+        centroids.resize(points.size()); 
+        std::copy(points.begin(), points.end(), centroids.begin()); 
+        std::random_shuffle(centroids.begin(), centroids.end()) ;
+        centroids.resize(_cluster_num); 
          
-        for (int i = 0; i < cluster_num; ++i) {
-            // check that they are unique!
-            //implace_back maybe a solution 
-            centroids.push_back(points[rgen()]);
-        }
-
-        old_centroids.resize(cluster_num);
-        old_point2cluster.resize(points.size());
-        std::cerr << "centroids.size = " << centroids.size() << std::endl;
+        point2cluster.resize(points.size());
     }
 
     void assign_clusters () {
+        _cluster_assign_diff = 0;
         int psize = points.size();
         for (int i = 0; i < psize; ++i) {
-            // find index of the centroid closest to the current point 
-            point2cluster.push_back( find_closest_point(points[i], centroids)); 
+            // find index of the centroid closest to the point i
+            int new_cluster_id = find_closest_point(points[i], centroids);
+            _cluster_assign_diff += ((point2cluster[i] == new_cluster_id) ? 0 : 1);
+            point2cluster[i] = new_cluster_id;
         }
     }
 
@@ -68,27 +64,34 @@ class cloud {
             std::cerr << "Cloud is empty.\n";
             exit(1);
         }
+        if (!k_num) {
+            std::cerr << "Number of clusters should be non-zero.\n";
+            exit(1);
+        }
         if (k_num > points.size()) {
             std::cerr << "Number of clusters should not be greater that cloud size.\n";
             exit(1);
         }
-        cluster_num = k_num;
+        _cluster_num = k_num;
         int iters = 0;
+        bool no_change = false;
         initialize();
-        std::cerr << "initialize\n";
         do {
-            old_centroids.assign(centroids.begin(), centroids.end());
-            old_point2cluster.assign(point2cluster.begin(), point2cluster.end());
             // assign each point to a closest centroid
             assign_clusters();
-            std::cerr << "assign_clusters\n";
             reassign_centroids();
-            std::cerr << "reassign_centroids\n";
-//            is_changed = check_assignment_changes();
-        ++iters;
-        // continue until no change in cluster values            
-        } while (iters < 30);
+            no_change = (_cluster_assign_diff < constants::EPS);
+            ++iters;
+        // continue UNTIL no change in cluster assign or reached MAX_ITER
+        // continue WHILE there is change in cluster assign and not reached MAX_ITER          
+        } while (iters < constants::MAX_ITER && !no_change);
+        std::cerr << iters << " iterations\n";
+    }
 
+    void print_centroids(std::ostream& os) const {
+        for (std::vector<point>::const_iterator it = centroids.begin(); it != centroids.end(); ++it) {
+            os << *it;
+        }
     }
 
     void print(std::ostream& os) const {

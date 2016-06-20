@@ -32,4 +32,4 @@ endif()
 set (MY_COMPILE_FLAGS "-Wall -std=c++11 ${OPTIMIZE_FLAG} ${PROFILE_FLAG} ${VECTOR_FLAG}")
 
 add_subdirectory(src)
-#add_subdirectory(test)
+add_subdirectory(test)

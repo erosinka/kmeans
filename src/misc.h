@@ -19,6 +19,11 @@ class random_generator {
         }
 };
 
+struct constants {
+    static const int MAX_ITER = 100;
+    static const int EPS = 5;
+};
+
 }
 
 #endif
