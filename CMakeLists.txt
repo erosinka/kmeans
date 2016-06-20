@@ -29,7 +29,7 @@ if (VECTOR)
     set (VECTOR_FLAG  "-g -m64 -O3 -msse4 -ftree-vectorize") 
 endif()
 
-set (MY_COMPILE_FLAGS "-Wall ${OPTIMIZE_FLAG} ${PROFILE_FLAG} ${VECTOR_FLAG}")
+set (MY_COMPILE_FLAGS "-Wall -std=c++11 ${OPTIMIZE_FLAG} ${PROFILE_FLAG} ${VECTOR_FLAG}")
 
 add_subdirectory(src)
 #add_subdirectory(test)
