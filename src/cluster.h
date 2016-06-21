@@ -16,7 +16,7 @@ template <typename T>
 class cloud {
     std::vector<point<T> > points;
     std::vector<point<T> > centroids;
-    // vector of cluster id of each point<T> i 
+    // vector of cluster id of each point i 
     std::vector<int> point2cluster;
     // number of clusters
     int _cluster_num;
@@ -86,13 +86,16 @@ class cloud {
         // continue UNTIL no change in cluster assign or reached MAX_ITER
         // continue WHILE there is change in cluster assign and not reached MAX_ITER          
         } while (iters < constants::max_iter && !no_change);
-        std::cerr << iters << " iterations\n";
+    //    std::cerr << iters << " iterations\n";
     }
 
     void print_centroids(std::ostream& os) const {
         std::copy(centroids.begin(), centroids.end(), std::ostream_iterator<point<T> >(os, " "));
     }
 
+    void print_assignment(std::ostream& os) const {
+        std::copy(point2cluster.begin(), point2cluster.end(), std::ostream_iterator<int >(os, "\n"));
+    }
     void print(std::ostream& os) const {
         std::copy(points.begin(), points.end(), std::ostream_iterator<point<T> >(os, " "));
         os << "\n";
