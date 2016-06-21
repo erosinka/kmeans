@@ -12,10 +12,11 @@
 
 namespace kmean {
 
+template <typename T>
 class cloud {
-    std::vector<point> points;
-    std::vector<point> centroids;
-    // vector of cluster id of each point i 
+    std::vector<point<T> > points;
+    std::vector<point<T> > centroids;
+    // vector of cluster id of each point<T> i 
     std::vector<int> point2cluster;
     // number of clusters
     int _cluster_num;
@@ -37,7 +38,7 @@ class cloud {
         _cluster_assign_diff = 0;
         int psize = points.size();
         for (int i = 0; i < psize; ++i) { 
-            // find index of the centroid closest to the point i
+            // find index of the centroid closest to the point<T> i
             int new_cluster_id = find_closest_point(points[i], centroids);
             _cluster_assign_diff += ((point2cluster[i] == new_cluster_id) ? 0 : 1);
             point2cluster[i] = new_cluster_id;
@@ -77,7 +78,7 @@ class cloud {
         bool no_change = false;
         initialize();
         do {
-            // assign each point to a closest centroid
+            // assign each point<T> to a closest centroid
             assign_clusters();
             reassign_centroids();
             no_change = (_cluster_assign_diff < 1);// constants::eps);
@@ -89,28 +90,30 @@ class cloud {
     }
 
     void print_centroids(std::ostream& os) const {
-        std::copy(centroids.begin(), centroids.end(), std::ostream_iterator<point>(os, " "));
+        std::copy(centroids.begin(), centroids.end(), std::ostream_iterator<point<T> >(os, " "));
     }
 
     void print(std::ostream& os) const {
-        std::copy(points.begin(), points.end(), std::ostream_iterator<point>(os, " "));
+        std::copy(points.begin(), points.end(), std::ostream_iterator<point<T> >(os, " "));
         os << "\n";
     }
    
     void read(std::istream & is) {
-        point tmp;
+        point<T> tmp;
         while (is >> tmp) {
             points.push_back(tmp);
         }
     }
 };
 
-std::ostream & operator<<(std::ostream & os, const cloud &obj) {
+template<typename T>
+std::ostream & operator<<(std::ostream & os, const cloud<T> &obj) {
     obj.print(os);
     return os;
 }
 
-std::istream  & operator>>(std::istream & is, cloud &obj) {
+template<typename T>
+std::istream  & operator>>(std::istream & is, cloud<T> &obj) {
     obj.read(is);
     return is;
 }

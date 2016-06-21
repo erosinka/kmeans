@@ -17,7 +17,7 @@ void gen_input(char *filename, int cloud_size) {
     }
     kmean::random_generator rg(-1000, 1000, cloud_size);
     for (int i = 0; i < cloud_size; ++i) {
-        kmean::point tmp(rg()*0.01, rg()*0.01, rg()*0.01);
+        kmean::point<float> tmp(rg()*0.01, rg()*0.01, rg()*0.01);
         ofs << tmp;
     }
     ofs.close();
@@ -34,7 +34,7 @@ int main (int argc, char *argv[]) {
         return 0;
     }
 //    gen_input(argv[1], 1000);
-    kmean::cloud test;
+    kmean::cloud<float> test;
     std::fstream fs;
     fs.open(argv[1]);
     if (!fs.is_open()) {
