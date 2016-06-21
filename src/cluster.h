@@ -29,7 +29,6 @@ class cloud {
         std::copy(points.begin(), points.end(), centroids.begin()); 
         std::random_shuffle(centroids.begin(), centroids.end()) ;
         centroids.resize(_cluster_num); 
-        print_centroids(std::cout);         
         point2cluster.resize(points.size());
     }
 
