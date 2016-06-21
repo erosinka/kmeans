@@ -1,8 +1,8 @@
-#include <iostream>
-#include <limits>
-
 #ifndef POINTS
 #define POINTS
+
+#include <iostream>
+#include <limits>
 
 namespace kmean {
 

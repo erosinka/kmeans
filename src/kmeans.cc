@@ -17,7 +17,7 @@ void gen_input(char *filename, int cloud_size) {
     }
     kmean::random_generator rg(-1000, 1000, cloud_size);
     for (int i = 0; i < cloud_size; ++i) {
-        kmean::point tmp(rg()/100, rg()/100, rg()/100);
+        kmean::point tmp(rg()*0.01, rg()*0.01, rg()*0.01);
         ofs << tmp;
     }
     ofs.close();
@@ -33,7 +33,7 @@ int main (int argc, char *argv[]) {
         std::cout << "Use --help for instructions.\n";
         return 0;
     }
-    gen_input(argv[1], 1000);
+//    gen_input(argv[1], 1000);
     kmean::cloud test;
     std::fstream fs;
     fs.open(argv[1]);

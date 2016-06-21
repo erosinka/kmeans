@@ -1,12 +1,13 @@
+#ifndef ALGO
+#define ALGO
+
 #include <cmath>
 #include <vector>
 #include <limits>
 #include "point.h"
 
-#ifndef ALGO
-#define ALGO
-
 namespace kmean {
+
 float dist_euclid (const point & first, const point & second) {
     float tmp = (first.get_x() - second.get_x()) * (first.get_x() - second.get_x()); 
     tmp += (first.get_y() - second.get_y()) * (first.get_y() - second.get_y());
@@ -20,7 +21,7 @@ int find_closest_point(const point & p, const std::vector<point> & p_vector) {
     int min_index = -1;
     int pvsize = p_vector.size(); 
     float min_dist = std::numeric_limits<float>::max();
-    //std::find_if(
+
     for (int i = 0; i < pvsize; ++i) {
         float cur_dist = dist_euclid(p, p_vector[i]);
         if (cur_dist < min_dist) {

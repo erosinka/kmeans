@@ -1,7 +1,7 @@
-#include <random>
-
 #ifndef MISC
 #define MISC
+
+#include <random>
 
 namespace kmean {
 class random_generator {
@@ -20,8 +20,9 @@ class random_generator {
 };
 
 struct constants {
-    static const int MAX_ITER = 100;
-    static const int EPS = 5;
+    static const int max_iter = 100;
+    static const int eps = 5;
+    static const int reserve_cloud_size = 4096;
 };
 
 }
